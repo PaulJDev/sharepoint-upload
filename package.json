@@ -1,17 +1,26 @@
 {
-  "name": "upload-sp",
+  "name": "sharepoint-upload",
+  "description": "Take it easy uploading files to Sharepoint",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Paul Javaloyes Alcaraz <pauljavaloyesdev@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.7.0",
     "node-sp-auth": "^3.0.8"
+  },
+  "keywords": ["sharepoint", "upload", "nodejs", "sharepoint-upload", "files", "sp", "sp-upload"],
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaulJDev/sharepoint-upload.git"
   }
 }

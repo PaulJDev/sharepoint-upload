@@ -44,9 +44,13 @@ class SharepointUpload {
         validate(url, credentials)
 
         const { origin, pathname } = new URL(url)
-        const [siteSlug, site] = pathname.split('/').filter(Boolean)
+        const [siteSlug, site, ...folder] = pathname.split('/').filter(Boolean)
         const { href } = new URL(`/${siteSlug}/${site}`, origin)
 
+        this.site = site
+        this.siteSlug = siteSlug
+
+        this.folder = `/${folder.join('/')}`
         this.url = href
         this.pathname = pathname
 
@@ -62,6 +66,7 @@ class SharepointUpload {
      * 
      * @param {String} filePath - The path to the file to upload
      * @param {Object} options.fileName - The name to use for the file in Sharepoint
+     * @param {Object} options.folder - The folder in Sharepoint where the file will be uploaded
      * 
      * @returns {Promise<void>}
      * 
@@ -77,7 +82,7 @@ class SharepointUpload {
      * If the file already exists in Sharepoint, it will be overwritten.
      * 
      */
-    async upload(filePath, { fileName } = {}) {
+    async upload(filePath, { fileName, folder } = {}) {
         const chunkSize = 1024 * 1024 * 48
         const stream = createReadStream(filePath, { highWaterMark: chunkSize})
 
@@ -90,6 +95,7 @@ class SharepointUpload {
         }
 
         const fileNameToUse = fileName || basename(filePath)
+        this.setFolder(folder)
         
         await this.#createFile(fileNameToUse, baseHeaders)
 
@@ -138,6 +144,13 @@ class SharepointUpload {
         catch (error) {
             throw new Error('It was not possible to upload the file')
         }
+    }
+
+    setFolder(folder) {
+        if(!folder) return
+        const { pathname } = new URL(folder, this.url)
+        this.folder = pathname
+        this.pathname = `/${this.siteSlug}/${this.site}${pathname}`
     }
 
     async #getAuth() {
